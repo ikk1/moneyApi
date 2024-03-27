@@ -1,5 +1,6 @@
 package com.junior.money.api.models;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,20 +8,24 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "person")
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long code;
-    
-    @NotNull
+
     @NotBlank
-    @Size(min = 3, max = 50)
+    @NotNull
     private String name;
+
+    @Embedded
+    private Address address;
+
+    @NotNull
+    private Boolean active;
 
     public Long getCode() {
         return code;
@@ -37,4 +42,21 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
 }
