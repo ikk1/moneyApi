@@ -3,12 +3,15 @@ package com.junior.money.api.exception;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -37,4 +40,11 @@ public class MoneyApiResponseEntityExceptionHandler extends ResponseEntityExcept
 
         return handleExceptionInternal(ex, apiErrorMessage, headers, status, request);
     }
+
+    @ExceptionHandler({EmptyResultDataAccessException.class})
+    public ResponseEntity<Object> handleResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request){
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.NOT_FOUND, new ValidationError("The resource was not found"));
+        return handleExceptionInternal(ex, apiErrorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
 }

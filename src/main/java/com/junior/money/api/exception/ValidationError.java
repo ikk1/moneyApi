@@ -1,5 +1,8 @@
 package com.junior.money.api.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ValidationError {
     private String field;
     private String errorMessage;
