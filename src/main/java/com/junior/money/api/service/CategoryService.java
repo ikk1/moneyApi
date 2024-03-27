@@ -16,10 +16,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-        private final ApplicationEventPublisher publisher;
+    private final ApplicationEventPublisher publisher;
     private HttpServletResponse response;
 
-    public CategoryService(CategoryRepository categoryRepository, ApplicationEventPublisher publisher, HttpServletResponse response) {
+    public CategoryService(CategoryRepository categoryRepository, ApplicationEventPublisher publisher,
+            HttpServletResponse response) {
         this.categoryRepository = categoryRepository;
         this.publisher = publisher;
         this.response = response;
@@ -30,7 +31,8 @@ public class CategoryService {
     }
 
     public Category getCategoryById(Long code) {
-        Category savedCategory = categoryRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
+        Category savedCategory = categoryRepository.findById(code)
+                .orElseThrow(() -> new EmptyResultDataAccessException(1));
         return savedCategory;
     }
 
@@ -41,10 +43,9 @@ public class CategoryService {
     }
 
     public void deleteCategoryById(Long code) {
-        Category savedCategory = categoryRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
+        Category savedCategory = categoryRepository.findById(code)
+                .orElseThrow(() -> new EmptyResultDataAccessException(1));
         categoryRepository.delete(savedCategory);
     }
-    
 
 }
-
