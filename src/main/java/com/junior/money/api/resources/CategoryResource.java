@@ -2,6 +2,7 @@ package com.junior.money.api.resources;
 
 import java.util.List;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +23,11 @@ import jakarta.validation.Valid;
 public class CategoryResource {
 
     private final CategoryService categoryService;
+    private final ApplicationEventPublisher publisher;
 
-    public CategoryResource(CategoryService categoryService) {
+    public CategoryResource(CategoryService categoryService, ApplicationEventPublisher publisher) {
         this.categoryService = categoryService;
+        this.publisher = publisher;
     }
 
     @GetMapping
@@ -41,7 +44,7 @@ public class CategoryResource {
     @PostMapping
     public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category,
             HttpServletResponse response) {
-        Category savedCategory = categoryService.createCategory(category, response);
+        Category savedCategory = categoryService.createCategory(category, response, publisher);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 

@@ -17,13 +17,10 @@ import jakarta.servlet.http.HttpServletResponse;
 public class PersonService {
 
     private final PersonRepository personRepository;
-    private final ApplicationEventPublisher publisher;
     private final NullAwareBeanUtils nullAwareBeanUtils;
 
-    public PersonService(PersonRepository personRepository, ApplicationEventPublisher publisher,
-            HttpServletResponse response, NullAwareBeanUtils nullAwareBeanUtils) {
+    public PersonService(PersonRepository personRepository, NullAwareBeanUtils nullAwareBeanUtils) {
         this.personRepository = personRepository;
-        this.publisher = publisher;
         this.nullAwareBeanUtils = nullAwareBeanUtils;
     }
 
@@ -47,7 +44,7 @@ public class PersonService {
         return savedPerson;
     }
 
-    public Person createPerson(Person person, HttpServletResponse response) {
+    public Person createPerson(Person person, HttpServletResponse response, ApplicationEventPublisher publisher) {
         Person savedPerson = personRepository.save(person);
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedPerson.getCode()));
         return savedPerson;

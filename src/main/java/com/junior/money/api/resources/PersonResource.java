@@ -3,6 +3,7 @@ package com.junior.money.api.resources;
 import java.util.List;
 
 import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +28,11 @@ import jakarta.validation.Valid;
 public class PersonResource {
 
     private final PersonService personService;
+    private final ApplicationEventPublisher publisher;
   
-    public PersonResource(PersonService personService) {
+    public PersonResource(PersonService personService, ApplicationEventPublisher publisher) {
         this.personService = personService;
+        this.publisher = publisher;
     }
 
     @GetMapping
@@ -45,7 +48,7 @@ public class PersonResource {
 
     @PostMapping
     public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person, HttpServletResponse response) {
-        Person savedPerson = personService.createPerson(person, response);
+        Person savedPerson = personService.createPerson(person, response, publisher);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
     }
 

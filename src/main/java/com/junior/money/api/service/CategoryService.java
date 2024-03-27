@@ -16,11 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final ApplicationEventPublisher publisher;
 
-    public CategoryService(CategoryRepository categoryRepository, ApplicationEventPublisher publisher) {
+    public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.publisher = publisher;
     }
 
     public List<Category> listAll() {
@@ -31,7 +29,7 @@ public class CategoryService {
         return findCategoryById(code);
     }
 
-    public Category createCategory(Category category, HttpServletResponse response) {
+    public Category createCategory(Category category, HttpServletResponse response, ApplicationEventPublisher publisher) {
         Category savedCategory = categoryRepository.save(category);
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedCategory.getCode()));
         return categoryRepository.save(category);
