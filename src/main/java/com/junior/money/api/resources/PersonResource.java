@@ -45,7 +45,7 @@ public class PersonResource {
 
     @PostMapping
     public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person, HttpServletResponse response) {
-        Person savedPerson = personService.createPerson(person);
+        Person savedPerson = personService.createPerson(person, response);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
     }
 

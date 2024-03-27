@@ -18,14 +18,12 @@ public class PersonService {
 
     private final PersonRepository personRepository;
     private final ApplicationEventPublisher publisher;
-    private HttpServletResponse response;
     private final NullAwareBeanUtils nullAwareBeanUtils;
 
     public PersonService(PersonRepository personRepository, ApplicationEventPublisher publisher,
             HttpServletResponse response, NullAwareBeanUtils nullAwareBeanUtils) {
         this.personRepository = personRepository;
         this.publisher = publisher;
-        this.response = response;
         this.nullAwareBeanUtils = nullAwareBeanUtils;
     }
 
@@ -34,28 +32,29 @@ public class PersonService {
     }
 
     public Person getPersonById(Long code) {
-        Person savedPerson = personRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
-        return savedPerson;
+        return findPersonById(code);
     }
 
     public void deletePersonById(Long code) {
-        Person savedPerson = personRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
+        Person savedPerson = findPersonById(code);
         personRepository.delete(savedPerson);
     }
 
     public Person updatePerson(Long code, Person person) {
-        Person savedPerson = personRepository.findById(code).orElse(null);
-        if (savedPerson == null)
-            throw new EmptyResultDataAccessException(1);
+        Person savedPerson = findPersonById(code);
         nullAwareBeanUtils.copyProperties(person, savedPerson);
         personRepository.save(person);
         return savedPerson;
     }
 
-    public Person createPerson(Person person) {
+    public Person createPerson(Person person, HttpServletResponse response) {
         Person savedPerson = personRepository.save(person);
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedPerson.getCode()));
         return savedPerson;
+    }
+
+    private Person findPersonById(Long code) {
+        return personRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
     }
 
 }

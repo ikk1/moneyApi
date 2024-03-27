@@ -41,7 +41,7 @@ public class CategoryResource {
     @PostMapping
     public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category,
             HttpServletResponse response) {
-        Category savedCategory = categoryService.createCategory(category);
+        Category savedCategory = categoryService.createCategory(category, response);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 
