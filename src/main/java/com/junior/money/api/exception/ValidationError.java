@@ -6,6 +6,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class ValidationError {
     private String field;
     private String errorMessage;
+    private String developerMessage;
+
+    public ValidationError(String field, String errorMessage, String developerMessage) {
+        this.field = field;
+        this.errorMessage = errorMessage;
+        this.developerMessage = developerMessage;
+    }
 
     public ValidationError(String field, String errorMessage) {
         this.field = field;
@@ -32,4 +39,11 @@ public class ValidationError {
         this.errorMessage = errorMessage;
     }
 
+    public String getDeveloperMessage() {
+        return developerMessage;
+    }
+
+    public void setDeveloperMessage(String developerMessage) {
+        this.developerMessage = developerMessage;
+    }
 }

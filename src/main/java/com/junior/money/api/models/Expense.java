@@ -1,6 +1,6 @@
 package com.junior.money.api.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,10 +29,10 @@ public class Expense {
     private String description;
 
     @NotNull
-    private Date dueDate;
+    private LocalDate dueDate;
 
     @NotNull
-    private Date paymentDate;
+    private LocalDate paymentDate;
 
     @NotNull
     private Double value;
@@ -44,10 +44,12 @@ public class Expense {
     @Enumerated(EnumType.STRING)
     private ExpenseType type;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "category_code")
     private Category category;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "person_code")
     private Person person;
@@ -68,19 +70,19 @@ public class Expense {
         this.description = description;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Date getPaymentDate() {
+    public LocalDate getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(Date paymentDate) {
+    public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
 

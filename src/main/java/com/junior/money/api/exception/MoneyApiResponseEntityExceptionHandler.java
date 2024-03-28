@@ -3,6 +3,7 @@ package com.junior.money.api.exception;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.junior.money.api.service.exception.PersonInactiveOrMissingException;
 
 @ControllerAdvice
 public class MoneyApiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -45,6 +48,18 @@ public class MoneyApiResponseEntityExceptionHandler extends ResponseEntityExcept
     public ResponseEntity<Object> handleResultDataAccessException(EmptyResultDataAccessException ex, WebRequest request){
         ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.NOT_FOUND, new ValidationError("The resource was not found"));
         return handleExceptionInternal(ex, apiErrorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, new ValidationError("Operation not allowed. Review the data sent and try again."));
+        return handleExceptionInternal(ex, apiErrorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler({PersonInactiveOrMissingException.class})
+    public ResponseEntity<Object> handlePersonInactiveOrMissingException(PersonInactiveOrMissingException ex, WebRequest request){
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, new ValidationError("The person is inactive or missing."));
+        return handleExceptionInternal(ex, apiErrorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 }
