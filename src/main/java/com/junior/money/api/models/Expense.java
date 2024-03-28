@@ -1,5 +1,7 @@
 package com.junior.money.api.models;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,10 +29,10 @@ public class Expense {
     private String description;
 
     @NotNull
-    private String dueDate;
+    private Date dueDate;
 
     @NotNull
-    private String paymentDate;
+    private Date paymentDate;
 
     @NotNull
     private Double value;
@@ -66,19 +68,19 @@ public class Expense {
         this.description = description;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
-    public String getPaymentDate() {
+    public Date getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(String paymentDate) {
+    public void setPaymentDate(Date paymentDate) {
         this.paymentDate = paymentDate;
     }
 
@@ -146,7 +148,5 @@ public class Expense {
             return false;
         return true;
     }
-
-    
 
 }

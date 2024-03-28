@@ -32,7 +32,7 @@ public class CategoryService {
     public Category createCategory(Category category, HttpServletResponse response, ApplicationEventPublisher publisher) {
         Category savedCategory = categoryRepository.save(category);
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedCategory.getCode()));
-        return categoryRepository.save(category);
+        return savedCategory;
     }
 
     public void deleteCategoryByCode(Long code) {

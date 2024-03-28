@@ -22,7 +22,6 @@ import com.junior.money.api.service.PersonService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
-
 @RestController
 @RequestMapping("/person")
 public class PersonResource {
