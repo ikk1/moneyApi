@@ -26,24 +26,21 @@ public class CategoryService {
     }
 
     public Category getCategoryByCode(Long code) {
-        return findCategoryByCode(code);
+        Category savedCategory = categoryRepository.findById(code)
+                .orElseThrow(() -> new EmptyResultDataAccessException(1));
+        return savedCategory;
     }
 
-    public Category createCategory(Category category, HttpServletResponse response, ApplicationEventPublisher publisher) {
+    public Category createCategory(Category category, HttpServletResponse response,
+            ApplicationEventPublisher publisher) {
         Category savedCategory = categoryRepository.save(category);
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedCategory.getCode()));
         return savedCategory;
     }
 
     public void deleteCategoryByCode(Long code) {
-        Category savedCategory = findCategoryByCode(code);
+        Category savedCategory = getCategoryByCode(code);
         categoryRepository.delete(savedCategory);
-    }
-
-    private Category findCategoryByCode(Long code) {
-        Category savedCategory = categoryRepository.findById(code)
-                .orElseThrow(() -> new EmptyResultDataAccessException(1));
-        return savedCategory;
     }
 
 }

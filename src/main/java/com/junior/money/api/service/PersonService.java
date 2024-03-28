@@ -29,16 +29,16 @@ public class PersonService {
     }
 
     public Person getPersonByCode(Long code) {
-        return findPersonByCode(code);
+        return personRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
     }
 
     public void deletePersonByCode(Long code) {
-        Person savedPerson = findPersonByCode(code);
+        Person savedPerson = getPersonByCode(code);
         personRepository.delete(savedPerson);
     }
 
     public Person updatePerson(Long code, Person person) {
-        Person savedPerson = findPersonByCode(code);
+        Person savedPerson = getPersonByCode(code);
         nullAwareBeanUtils.copyProperties(person, savedPerson);
         personRepository.save(person);
         return savedPerson;
@@ -49,9 +49,4 @@ public class PersonService {
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedPerson.getCode()));
         return savedPerson;
     }
-
-    private Person findPersonByCode(Long code) {
-        return personRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
-    }
-
 }

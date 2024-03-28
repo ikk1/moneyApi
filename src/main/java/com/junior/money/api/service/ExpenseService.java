@@ -45,4 +45,9 @@ public class ExpenseService {
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedExpense.getCode()));
         return savedExpense;
     }
+
+    public void deleteExpense(Long code) {
+        Expense savedExpense = getExpenseByCode(code);
+        expenseRepository.delete(savedExpense);
+    }
 }
