@@ -3,6 +3,10 @@ package com.junior.money.api.repository.expense;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import com.junior.money.api.models.Expense;
 import com.junior.money.api.models.Expense_;
 import com.junior.money.api.repository.filter.ExpenseFilter;
@@ -21,7 +25,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryQuery {
     private EntityManager manager;
 
     @Override
-    public List<Expense> filter(ExpenseFilter filter) {
+    public Page<Expense> filter(ExpenseFilter filter, Pageable pageable) {
 
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Expense> criteria = builder.createQuery(Expense.class);
@@ -32,7 +36,11 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryQuery {
         Predicate[] predicates = createRestrictions(filter, builder, root);
         criteria.where(predicates);
         TypedQuery<Expense> query = manager.createQuery(criteria);
-        return query.getResultList();
+
+        // Pagination
+        addRestrictionsForPagination(query, pageable);
+
+        return new PageImpl<>(query.getResultList(), pageable, total(filter));
     }
 
     private Predicate[] createRestrictions(ExpenseFilter filter, CriteriaBuilder builder, Root<Expense> root) {
@@ -57,4 +65,27 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryQuery {
         return predicates.toArray(new Predicate[predicates.size()]);
     }
 
+    private void addRestrictionsForPagination(TypedQuery<Expense> query, Pageable pageable) {
+
+        int currentPage = pageable.getPageNumber();
+        int totalRecordsPerPage = pageable.getPageSize();
+        int firstRecordPage = currentPage * totalRecordsPerPage;
+
+        query.setFirstResult(firstRecordPage);
+        query.setMaxResults(totalRecordsPerPage);
+
+    }
+
+    private Long total(ExpenseFilter filter) {
+
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<Expense> root = criteria.from(Expense.class);
+
+        Predicate[] predicates = createRestrictions(new ExpenseFilter(), builder, root);
+        criteria.where(predicates);
+        criteria.select(builder.count(root));
+
+        return manager.createQuery(criteria).getSingleResult();
+    }
 }

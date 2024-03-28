@@ -1,8 +1,8 @@
 package com.junior.money.api.resources;
 
-import java.util.List;
-
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +33,8 @@ public class ExpenseResource {
     }
 
     @GetMapping
-    public List<Expense> getAllExpenses(ExpenseFilter expenseFilter) {
-        return expenseService.getAllExpenses(expenseFilter);
+    public Page<Expense> getAllExpenses(ExpenseFilter expenseFilter, Pageable pageable) {
+        return expenseService.getAllExpenses(expenseFilter, pageable);
     }
 
     @GetMapping("/{code}")

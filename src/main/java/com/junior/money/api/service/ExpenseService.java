@@ -1,9 +1,9 @@
 package com.junior.money.api.service;
 
-import java.util.List;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.junior.money.api.event.CreatedResourceEvent;
@@ -27,8 +27,8 @@ public class ExpenseService {
         this.personRepository = personRepository;
     }
 
-    public List<Expense> getAllExpenses(ExpenseFilter expenseFilter) {
-        return expenseRepository.filter(expenseFilter);
+    public Page<Expense> getAllExpenses(ExpenseFilter expenseFilter, Pageable pageable) {
+        return expenseRepository.filter(expenseFilter, pageable);
     }
 
     public Expense getExpenseByCode(Long code) {
