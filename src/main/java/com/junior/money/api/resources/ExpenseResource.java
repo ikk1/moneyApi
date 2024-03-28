@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.junior.money.api.models.Expense;
+import com.junior.money.api.dto.ExpenseDto;
 import com.junior.money.api.repository.filter.ExpenseFilter;
 import com.junior.money.api.service.ExpenseService;
 
@@ -33,20 +33,20 @@ public class ExpenseResource {
     }
 
     @GetMapping
-    public Page<Expense> getAllExpenses(ExpenseFilter expenseFilter, Pageable pageable) {
+    public Page<ExpenseDto> getAllExpenses(ExpenseFilter expenseFilter, Pageable pageable) {
         return expenseService.getAllExpenses(expenseFilter, pageable);
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Expense> getExpenseByCode(@PathVariable Long code) {
-        Expense savedExpense = expenseService.getExpenseByCode(code);
+    public ResponseEntity<ExpenseDto> getExpenseByCode(@PathVariable Long code) {
+        ExpenseDto savedExpense = expenseService.getExpenseByCode(code);
         return ResponseEntity.ok(savedExpense);
     }
 
     @PostMapping
-    public ResponseEntity<Expense> createExpense(@Valid @RequestBody Expense expense, HttpServletResponse response) {
-        expense = expenseService.createExpense(expense, response, publisher);
-        return ResponseEntity.status(HttpStatus.CREATED).body(expense);
+    public ResponseEntity<ExpenseDto> createExpense(@Valid @RequestBody ExpenseDto expenseDto, HttpServletResponse response) {
+        expenseDto = expenseService.createExpense(expenseDto, response, publisher);
+        return ResponseEntity.status(HttpStatus.CREATED).body(expenseDto);
     }
 
     @DeleteMapping("/{code}")

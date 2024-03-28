@@ -6,7 +6,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.junior.money.api.dto.CategoryDto;
 import com.junior.money.api.event.CreatedResourceEvent;
+import com.junior.money.api.helper.mappers.CategoryMapper;
 import com.junior.money.api.models.Category;
 import com.junior.money.api.repository.CategoryRepository;
 
@@ -16,31 +18,38 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getAllCategories() {
+        return categoryRepository.findAll().stream().map(categoryMapper::toDto).toList();
     }
 
-    public Category getCategoryByCode(Long code) {
-        Category savedCategory = categoryRepository.findById(code)
-                .orElseThrow(() -> new EmptyResultDataAccessException(1));
-        return savedCategory;
+    public CategoryDto getCategoryByCode(Long code) {
+        Category savedCategory = findCategoryByCode(code);
+        return categoryMapper.toDto(savedCategory);
     }
 
-    public Category createCategory(Category category, HttpServletResponse response,
+    public CategoryDto createCategory(CategoryDto category, HttpServletResponse response,
             ApplicationEventPublisher publisher) {
-        Category savedCategory = categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(categoryMapper.toEntity(category));
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedCategory.getCode()));
-        return savedCategory;
+        return categoryMapper.toDto(savedCategory);
     }
 
     public void deleteCategoryByCode(Long code) {
-        Category savedCategory = getCategoryByCode(code);
+        Category savedCategory = findCategoryByCode(code);
         categoryRepository.delete(savedCategory);
+    }
+
+    private Category findCategoryByCode(Long code) {
+        Category savedCategory = categoryRepository.findById(code)
+                .orElseThrow(() -> new EmptyResultDataAccessException(1));
+        return savedCategory;
     }
 
 }

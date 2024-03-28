@@ -12,5 +12,4 @@ public class AppConfig {
     NullAwareBeanUtils nullAwareBeanUtils() {
         return new NullAwareBeanUtils();
     }
-    
 }

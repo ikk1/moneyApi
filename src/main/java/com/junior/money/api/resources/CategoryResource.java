@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.junior.money.api.models.Category;
+import com.junior.money.api.dto.CategoryDto;
 import com.junior.money.api.service.CategoryService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,20 +31,20 @@ public class CategoryResource {
     }
 
     @GetMapping
-    public List<Category> getAllCategories() {
+    public List<CategoryDto> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Category> findCategoryByCode(@PathVariable Long code) {
-        Category savedCategory = categoryService.getCategoryByCode(code);
+    public ResponseEntity<CategoryDto> findCategoryByCode(@PathVariable Long code) {
+        CategoryDto savedCategory = categoryService.getCategoryByCode(code);
         return ResponseEntity.ok(savedCategory);
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category,
+    public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto,
             HttpServletResponse response) {
-        Category savedCategory = categoryService.createCategory(category, response, publisher);
+                CategoryDto savedCategory = categoryService.createCategory(categoryDto, response, publisher);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.junior.money.api.models.Person;
+import com.junior.money.api.dto.PersonDto;
 import com.junior.money.api.service.PersonService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,31 +35,31 @@ public class PersonResource {
     }
 
     @GetMapping
-    public List<Person> getAllPersons() {
+    public List<PersonDto> getAllPersons() {
         return personService.getAllPersons();
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Person> getPersonByCode(@PathVariable Long code) {
-        Person savedPerson = personService.getPersonByCode(code);
+    public ResponseEntity<PersonDto> getPersonByCode(@PathVariable Long code) {
+        PersonDto savedPerson = personService.getPersonByCode(code);
         return ResponseEntity.ok(savedPerson);
     }
 
     @PostMapping
-    public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person, HttpServletResponse response) {
-        Person savedPerson = personService.createPerson(person, response, publisher);
+    public ResponseEntity<PersonDto> createPerson(@Valid @RequestBody PersonDto personDto, HttpServletResponse response) {
+        PersonDto savedPerson = personService.createPerson(personDto, response, publisher);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<Person> putPerson(@PathVariable Long code, @Valid @RequestBody Person person) {
-        Person savedPerson = personService.updatePerson(code, person);
+    public ResponseEntity<PersonDto> putPerson(@PathVariable Long code, @Valid @RequestBody PersonDto personDto) {
+        PersonDto savedPerson = personService.updatePerson(code, personDto);
         return ResponseEntity.status(HttpStatus.OK).body(savedPerson);
     }
 
     @PatchMapping("/{code}")
-    public ResponseEntity<Person> patchPerson(@PathVariable Long code, @RequestBody Person person) throws BeansException {
-        Person savedPerson = personService.updatePerson(code, person);
+    public ResponseEntity<PersonDto> patchPerson(@PathVariable Long code, @RequestBody PersonDto personDto) throws BeansException {
+        PersonDto savedPerson = personService.updatePerson(code, personDto);
         return ResponseEntity.status(HttpStatus.OK).body(savedPerson);
     }
 
