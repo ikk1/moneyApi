@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.junior.money.api.models.Expense;
+import com.junior.money.api.repository.filter.ExpenseFilter;
 import com.junior.money.api.service.ExpenseService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,8 +32,8 @@ public class ExpenseResource {
     }
 
     @GetMapping
-    public List<Expense> getAllExpenses() {
-        return expenseService.getAllExpenses();
+    public List<Expense> getAllExpenses(ExpenseFilter expenseFilter) {
+        return expenseService.getAllExpenses(expenseFilter);
     }
 
     @GetMapping("/{code}")
