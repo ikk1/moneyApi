@@ -36,13 +36,13 @@ public class PersonResource {
     }
 
     @GetMapping
-    public List<Person> listAll() {
-        return personService.listAll();
+    public List<Person> getAllPersons() {
+        return personService.getAllPersons();
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<Person> getPersonById(@PathVariable Long code) {
-        Person savedPerson = personService.getPersonById(code);
+    public ResponseEntity<Person> getPersonByCode(@PathVariable Long code) {
+        Person savedPerson = personService.getPersonByCode(code);
         return ResponseEntity.ok(savedPerson);
     }
 
@@ -66,7 +66,7 @@ public class PersonResource {
 
     @DeleteMapping("/{code}")
     public ResponseEntity<Void> deletePerson(@PathVariable Long code) {
-        personService.deletePersonById(code);
+        personService.deletePersonByCode(code);
         return ResponseEntity.noContent().build();
     }
 

@@ -24,21 +24,21 @@ public class PersonService {
         this.nullAwareBeanUtils = nullAwareBeanUtils;
     }
 
-    public List<Person> listAll() {
+    public List<Person> getAllPersons() {
         return personRepository.findAll();
     }
 
-    public Person getPersonById(Long code) {
-        return findPersonById(code);
+    public Person getPersonByCode(Long code) {
+        return findPersonByCode(code);
     }
 
-    public void deletePersonById(Long code) {
-        Person savedPerson = findPersonById(code);
+    public void deletePersonByCode(Long code) {
+        Person savedPerson = findPersonByCode(code);
         personRepository.delete(savedPerson);
     }
 
     public Person updatePerson(Long code, Person person) {
-        Person savedPerson = findPersonById(code);
+        Person savedPerson = findPersonByCode(code);
         nullAwareBeanUtils.copyProperties(person, savedPerson);
         personRepository.save(person);
         return savedPerson;
@@ -50,7 +50,7 @@ public class PersonService {
         return savedPerson;
     }
 
-    private Person findPersonById(Long code) {
+    private Person findPersonByCode(Long code) {
         return personRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
     }
 

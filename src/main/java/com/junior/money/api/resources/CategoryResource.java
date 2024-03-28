@@ -31,13 +31,13 @@ public class CategoryResource {
     }
 
     @GetMapping
-    public List<Category> listAll() {
-        return categoryService.listAll();
+    public List<Category> getAllCategories() {
+        return categoryService.getAllCategories();
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<Category> findCategoryByCode(@PathVariable Long code) {
-        Category savedCategory = categoryService.getCategoryById(code);
+        Category savedCategory = categoryService.getCategoryByCode(code);
         return ResponseEntity.ok(savedCategory);
     }
 

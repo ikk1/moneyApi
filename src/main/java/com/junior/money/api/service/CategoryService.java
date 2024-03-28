@@ -21,12 +21,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> listAll() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    public Category getCategoryById(Long code) {
-        return findCategoryById(code);
+    public Category getCategoryByCode(Long code) {
+        return findCategoryByCode(code);
     }
 
     public Category createCategory(Category category, HttpServletResponse response, ApplicationEventPublisher publisher) {
@@ -35,12 +35,12 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public void deleteCategoryById(Long code) {
-        Category savedCategory = findCategoryById(code);
+    public void deleteCategoryByCode(Long code) {
+        Category savedCategory = findCategoryByCode(code);
         categoryRepository.delete(savedCategory);
     }
 
-    private Category findCategoryById(Long code) {
+    private Category findCategoryByCode(Long code) {
         Category savedCategory = categoryRepository.findById(code)
                 .orElseThrow(() -> new EmptyResultDataAccessException(1));
         return savedCategory;
