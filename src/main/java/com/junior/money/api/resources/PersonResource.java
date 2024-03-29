@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.junior.money.api.dto.PersonDto;
+import com.junior.money.api.helper.mappers.PersonMapper;
+import com.junior.money.api.models.Person;
 import com.junior.money.api.service.PersonService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,39 +30,46 @@ public class PersonResource {
 
     private final PersonService personService;
     private final ApplicationEventPublisher publisher;
-  
-    public PersonResource(PersonService personService, ApplicationEventPublisher publisher) {
+    private final PersonMapper personMapper;
+
+    public PersonResource(PersonService personService, ApplicationEventPublisher publisher, PersonMapper personMapper) {
         this.personService = personService;
         this.publisher = publisher;
+        this.personMapper = personMapper;
     }
 
     @GetMapping
     public List<PersonDto> getAllPersons() {
-        return personService.getAllPersons();
+        return personService.getAllPersons().stream().map(personMapper::toDto).toList();
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<PersonDto> getPersonByCode(@PathVariable Long code) {
-        PersonDto savedPerson = personService.getPersonByCode(code);
-        return ResponseEntity.ok(savedPerson);
+        return ResponseEntity.ok(personMapper.toDto(personService.getPersonByCode(code)));
     }
 
     @PostMapping
-    public ResponseEntity<PersonDto> createPerson(@Valid @RequestBody PersonDto personDto, HttpServletResponse response) {
-        PersonDto savedPerson = personService.createPerson(personDto, response, publisher);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
+    public ResponseEntity<PersonDto> createPerson(@Valid @RequestBody PersonDto personDto,
+            HttpServletResponse response) {
+        Person personEntity = personMapper.toEntity(personDto);
+        personService.createPerson(personEntity, response, publisher);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personDto);
     }
 
     @PutMapping("/{code}")
     public ResponseEntity<PersonDto> putPerson(@PathVariable Long code, @Valid @RequestBody PersonDto personDto) {
-        PersonDto savedPerson = personService.updatePerson(code, personDto);
-        return ResponseEntity.status(HttpStatus.OK).body(savedPerson);
+        Person personEntity = personMapper.toEntity(personDto);
+        personService.updatePerson(code, personEntity);
+        return ResponseEntity.status(HttpStatus.OK).body(personDto);
     }
 
     @PatchMapping("/{code}")
-    public ResponseEntity<PersonDto> patchPerson(@PathVariable Long code, @RequestBody PersonDto personDto) throws BeansException {
-        PersonDto savedPerson = personService.updatePerson(code, personDto);
-        return ResponseEntity.status(HttpStatus.OK).body(savedPerson);
+    public ResponseEntity<PersonDto> patchPerson(@PathVariable Long code, @RequestBody PersonDto personDto)
+            throws BeansException {
+
+        Person personEntity = personMapper.toEntity(personDto);
+        personService.updatePerson(code, personEntity);
+        return ResponseEntity.status(HttpStatus.OK).body(personDto);
     }
 
     @DeleteMapping("/{code}")

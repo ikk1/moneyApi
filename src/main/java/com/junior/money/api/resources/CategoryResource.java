@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.junior.money.api.dto.CategoryDto;
+import com.junior.money.api.helper.mappers.CategoryMapper;
+import com.junior.money.api.models.Category;
 import com.junior.money.api.service.CategoryService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,28 +26,30 @@ public class CategoryResource {
 
     private final CategoryService categoryService;
     private final ApplicationEventPublisher publisher;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryResource(CategoryService categoryService, ApplicationEventPublisher publisher) {
+    public CategoryResource(CategoryService categoryService, ApplicationEventPublisher publisher, CategoryMapper categoryMapper) {
         this.categoryService = categoryService;
         this.publisher = publisher;
+        this.categoryMapper = categoryMapper;
     }
 
     @GetMapping
     public List<CategoryDto> getAllCategories() {
-        return categoryService.getAllCategories();
+        return categoryService.getAllCategories().stream().map(categoryMapper::toDto).toList();
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<CategoryDto> findCategoryByCode(@PathVariable Long code) {
-        CategoryDto savedCategory = categoryService.getCategoryByCode(code);
-        return ResponseEntity.ok(savedCategory);
+        return ResponseEntity.ok(categoryMapper.toDto(categoryService.getCategoryByCode(code)));
     }
 
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto,
             HttpServletResponse response) {
-                CategoryDto savedCategory = categoryService.createCategory(categoryDto, response, publisher);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
+        Category categoryEntity = categoryMapper.toEntity(categoryDto);
+        categoryService.createCategory(categoryEntity, response, publisher);
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryDto);
     }
 
 }

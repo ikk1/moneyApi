@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import com.junior.money.api.dto.ExpenseDto;
-import com.junior.money.api.helper.mappers.ExpenseMapper;
 import com.junior.money.api.models.Expense;
 import com.junior.money.api.models.Expense_;
 import com.junior.money.api.repository.filter.ExpenseFilter;
@@ -26,14 +24,8 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryQuery {
     @PersistenceContext
     private EntityManager manager;
 
-    private final ExpenseMapper expenseMapper;
-
-    public ExpenseRepositoryImpl(ExpenseMapper expenseMapper) {
-        this.expenseMapper = expenseMapper;
-    }
-
     @Override
-    public Page<ExpenseDto> filter(ExpenseFilter filter, Pageable pageable) {
+    public Page<Expense> filter(ExpenseFilter filter, Pageable pageable) {
 
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Expense> criteria = builder.createQuery(Expense.class);
@@ -47,10 +39,8 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryQuery {
 
         // Pagination
         addRestrictionsForPagination(query, pageable);
-        
-        List<ExpenseDto> listExpense = query.getResultList().stream().map(expenseMapper::toDto).toList();
 
-        return new PageImpl<>(listExpense, pageable, total(filter));
+        return new PageImpl<>(query.getResultList(), pageable, total(filter));
     }
 
     private Predicate[] createRestrictions(ExpenseFilter filter, CriteriaBuilder builder, Root<Expense> root) {

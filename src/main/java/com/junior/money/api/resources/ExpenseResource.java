@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.junior.money.api.dto.ExpenseDto;
+import com.junior.money.api.helper.mappers.ExpenseMapper;
+import com.junior.money.api.models.Expense;
 import com.junior.money.api.repository.filter.ExpenseFilter;
 import com.junior.money.api.service.ExpenseService;
 
@@ -26,26 +28,30 @@ public class ExpenseResource {
 
     private final ExpenseService expenseService;
     private final ApplicationEventPublisher publisher;
+    private final ExpenseMapper expenseMapper;
 
-    public ExpenseResource(ExpenseService expenseService, ApplicationEventPublisher publisher) {
+    public ExpenseResource(ExpenseService expenseService, ApplicationEventPublisher publisher,
+            ExpenseMapper expenseMapper) {
         this.expenseService = expenseService;
         this.publisher = publisher;
+        this.expenseMapper = expenseMapper;
     }
 
     @GetMapping
     public Page<ExpenseDto> getAllExpenses(ExpenseFilter expenseFilter, Pageable pageable) {
-        return expenseService.getAllExpenses(expenseFilter, pageable);
+        return expenseService.getAllExpenses(expenseFilter, pageable).map(expenseMapper::toDto);
     }
 
     @GetMapping("/{code}")
     public ResponseEntity<ExpenseDto> getExpenseByCode(@PathVariable Long code) {
-        ExpenseDto savedExpense = expenseService.getExpenseByCode(code);
-        return ResponseEntity.ok(savedExpense);
+        return ResponseEntity.ok(expenseMapper.toDto(expenseService.getExpenseByCode(code)));
     }
 
     @PostMapping
-    public ResponseEntity<ExpenseDto> createExpense(@Valid @RequestBody ExpenseDto expenseDto, HttpServletResponse response) {
-        expenseDto = expenseService.createExpense(expenseDto, response, publisher);
+    public ResponseEntity<ExpenseDto> createExpense(@Valid @RequestBody ExpenseDto expenseDto,
+            HttpServletResponse response) {
+        Expense expenseEntity = expenseMapper.toEntity(expenseDto);
+        expenseService.createExpense(expenseEntity, response, publisher);
         return ResponseEntity.status(HttpStatus.CREATED).body(expenseDto);
     }
 
@@ -54,5 +60,5 @@ public class ExpenseResource {
         expenseService.deleteExpense(code);
         return ResponseEntity.noContent().build();
     }
-    
+
 }

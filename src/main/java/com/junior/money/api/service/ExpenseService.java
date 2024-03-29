@@ -6,9 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.junior.money.api.dto.ExpenseDto;
 import com.junior.money.api.event.CreatedResourceEvent;
-import com.junior.money.api.helper.mappers.ExpenseMapper;
 import com.junior.money.api.models.Expense;
 import com.junior.money.api.models.Person;
 import com.junior.money.api.repository.ExpenseRepository;
@@ -23,45 +21,36 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final PersonRepository personRepository;
-    private final ExpenseMapper expenseMapper;
 
-    public ExpenseService(ExpenseRepository expenseRepository, PersonRepository personRepository, ExpenseMapper expenseMapper) {
+    public ExpenseService(ExpenseRepository expenseRepository, PersonRepository personRepository) {
         this.expenseRepository = expenseRepository;
         this.personRepository = personRepository;
-        this.expenseMapper = expenseMapper;
     }
 
-    public Page<ExpenseDto> getAllExpenses(ExpenseFilter expenseFilter, Pageable pageable) {
+    public Page<Expense> getAllExpenses(ExpenseFilter expenseFilter, Pageable pageable) {
         return expenseRepository.filter(expenseFilter, pageable);
     }
 
-    public ExpenseDto getExpenseByCode(Long code) {
-        Expense savedExpense = findExpenseByCode(code);
-        return expenseMapper.toDto(savedExpense);
+    public Expense getExpenseByCode(Long code) {
+        return expenseRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
     }
 
-    public ExpenseDto createExpense(ExpenseDto expenseDto, HttpServletResponse response,
+    public Expense createExpense(Expense expense, HttpServletResponse response,
             ApplicationEventPublisher publisher) {
 
-        Person savedPerson = personRepository.findById(expenseDto.person().code())
+        Person savedPerson = personRepository.findById(expense.getPerson().getCode())
                 .orElseThrow(() -> new EmptyResultDataAccessException(1));
 
         if (savedPerson.isInactive())
             throw new PersonInactiveOrMissingException();
 
-        Expense expenseEntity = expenseMapper.toEntity(expenseDto);
-
-        Expense savedExpense = expenseRepository.save(expenseEntity);
+        Expense savedExpense = expenseRepository.save(expense);
         publisher.publishEvent(new CreatedResourceEvent(this, response, savedExpense.getCode()));
-        return expenseMapper.toDto(savedExpense);
+        return savedExpense;
     }
 
     public void deleteExpense(Long code) {
-        Expense savedExpense = findExpenseByCode(code);
-        expenseRepository.delete(savedExpense);
+        expenseRepository.deleteById(code);
     }
 
-    private Expense findExpenseByCode(Long code) {
-        return expenseRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
-    }
 }
