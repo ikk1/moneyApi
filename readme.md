@@ -99,7 +99,8 @@ This API provides functionalities for expense management, where regular users ca
   - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
   
 ## How to Use:
-1. Clone the repository: `git clone git@github.com:ikk1/moneyApi.git`
-2. Install Docker and Docker Compose
+1. Install Docker and Docker Compose
+2. Clone the repository: `git clone git@github.com:ikk1/moneyApi.git` and enter on moneyApi folder
 3. Run the command: `docker-compose up`
-4. You need to register a user to perform queries/registrations.
+
+**Note.:** You will need to register a user to perform queries/registrations.
