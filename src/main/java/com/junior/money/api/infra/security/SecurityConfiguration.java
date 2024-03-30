@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                     authorize.requestMatchers(HttpMethod.POST, "/categories").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.POST, "/persons").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.POST, "/expenses").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/expenses").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/auth/register").permitAll();
                     authorize.anyRequest().authenticated();
