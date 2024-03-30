@@ -77,8 +77,32 @@ This API provides functionalities for expense management, where regular users ca
 ### Users
 - **URL:** `/auth`
   
-  - Login method (`/login`)
   - Register method (`/register`)
+
+  **Payload for register:**
+  
+  ```json
+  {
+      "login":"auser",
+      "password":"apassword",
+      "name":"aname",
+      "role": "ADMIN"
+  }
+
+  ```
+
+  - Login method (`/login`)
+
+  **Payload for login:**
+  
+  ```json
+  {
+      "login":"auser",
+      "password":"apassword"
+  }
+  ```
+
+
 
 ## Development Stack:
 - Spring Web
