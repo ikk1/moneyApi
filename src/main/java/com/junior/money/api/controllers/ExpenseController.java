@@ -1,4 +1,4 @@
-package com.junior.money.api.resources;
+package com.junior.money.api.controllers;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -23,14 +23,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/expenses")
-public class ExpenseResource {
+@RequestMapping("expenses")
+public class ExpenseController {
 
     private final ExpenseService expenseService;
     private final ApplicationEventPublisher publisher;
     private final ExpenseMapper expenseMapper;
 
-    public ExpenseResource(ExpenseService expenseService, ApplicationEventPublisher publisher,
+    public ExpenseController(ExpenseService expenseService, ApplicationEventPublisher publisher,
             ExpenseMapper expenseMapper) {
         this.expenseService = expenseService;
         this.publisher = publisher;

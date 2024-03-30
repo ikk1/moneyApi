@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.junior.money.api.service.exception.PersonInactiveOrMissingException;
-
 @ControllerAdvice
 public class MoneyApiResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -59,6 +57,12 @@ public class MoneyApiResponseEntityExceptionHandler extends ResponseEntityExcept
     @ExceptionHandler({PersonInactiveOrMissingException.class})
     public ResponseEntity<Object> handlePersonInactiveOrMissingException(PersonInactiveOrMissingException ex, WebRequest request){
         ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, new ValidationError("The person is inactive or missing."));
+        return handleExceptionInternal(ex, apiErrorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler({UserAuthenticationException.class})
+    public ResponseEntity<Object> handleUserAuthenticationException(UserAuthenticationException ex, WebRequest request){
+        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(HttpStatus.BAD_REQUEST, new ValidationError(ex.getMessage()));
         return handleExceptionInternal(ex, apiErrorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 

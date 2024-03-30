@@ -1,4 +1,4 @@
-package com.junior.money.api.configuration;
+package com.junior.money.api.infra.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

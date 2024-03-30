@@ -1,4 +1,4 @@
-package com.junior.money.api.resources;
+package com.junior.money.api.controllers;
 
 import java.util.List;
 
@@ -25,14 +25,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/person")
-public class PersonResource {
+@RequestMapping("persons")
+public class PersonController {
 
     private final PersonService personService;
     private final ApplicationEventPublisher publisher;
     private final PersonMapper personMapper;
 
-    public PersonResource(PersonService personService, ApplicationEventPublisher publisher, PersonMapper personMapper) {
+    public PersonController(PersonService personService, ApplicationEventPublisher publisher, PersonMapper personMapper) {
         this.personService = personService;
         this.publisher = publisher;
         this.personMapper = personMapper;

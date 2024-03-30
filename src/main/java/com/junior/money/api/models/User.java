@@ -14,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -22,8 +24,18 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long code;
+
+    @NotNull
+    @NotBlank
+    private String name;
+    @NotNull
+    @NotBlank
     private String login;
+
+    @NotNull
+    @NotBlank
     private String password;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -33,6 +45,14 @@ public class User implements UserDetails {
 
     public void setCode(Long code) {
         this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLogin() {

@@ -1,4 +1,4 @@
-package com.junior.money.api.resources;
+package com.junior.money.api.controllers;
 
 import java.util.List;
 
@@ -21,14 +21,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/categories")
-public class CategoryResource {
+@RequestMapping("categories")
+public class CategoryController {
 
     private final CategoryService categoryService;
     private final ApplicationEventPublisher publisher;
     private final CategoryMapper categoryMapper;
 
-    public CategoryResource(CategoryService categoryService, ApplicationEventPublisher publisher, CategoryMapper categoryMapper) {
+    public CategoryController(CategoryService categoryService, ApplicationEventPublisher publisher, CategoryMapper categoryMapper) {
         this.categoryService = categoryService;
         this.publisher = publisher;
         this.categoryMapper = categoryMapper;

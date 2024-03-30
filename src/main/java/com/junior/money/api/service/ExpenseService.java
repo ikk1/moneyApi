@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.junior.money.api.event.CreatedResourceEvent;
+import com.junior.money.api.exception.PersonInactiveOrMissingException;
 import com.junior.money.api.models.Expense;
 import com.junior.money.api.models.Person;
 import com.junior.money.api.repository.ExpenseRepository;
 import com.junior.money.api.repository.PersonRepository;
 import com.junior.money.api.repository.filter.ExpenseFilter;
-import com.junior.money.api.service.exception.PersonInactiveOrMissingException;
 
 import jakarta.servlet.http.HttpServletResponse;
 
