@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  money-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: money-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/money
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=vesper
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JWT_SECRET=Z61Rgyx4sFTPfN9Idzv4JbfoPQs0gB
+    depends_on:
+      postgres:
+        condition: service_started
+    
+    networks:
+      - micro-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_money
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: money
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: vesper
+    networks:
+      - micro-network
+
+networks:
+  micro-network:
+    driver: bridge
